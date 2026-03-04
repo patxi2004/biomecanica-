@@ -1,43 +1,47 @@
+// ============================================================
+//  main.dart  —  Punto de entrada de la app Flutter
+//  Control de robot bípedo 8-DOF vía BLE
+// ============================================================
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'bluetooth_service.dart';
-import 'home_screen.dart';
+import 'models/robot_state.dart';
+import 'screens/home_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider(
-      create: (_) => BluetoothService(),
-      child: const ExoApp(),
+      create: (_) => RobotState(),
+      child: const BipedApp(),
     ),
   );
 }
 
-class ExoApp extends StatelessWidget {
-  const ExoApp({super.key});
+class BipedApp extends StatelessWidget {
+  const BipedApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Exo-Robot Controller',
+      title: 'Bípedo 8-DOF',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        colorScheme: ColorScheme.dark(
-          primary:   Colors.cyanAccent,
-          secondary: Colors.cyanAccent.shade700,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1565C0),
+          brightness: Brightness.light,
         ),
-        sliderTheme: const SliderThemeData(
-          thumbColor:           Colors.white,
-          overlayColor:         Color(0x29FFFFFF),
-          trackHeight:          4,
-          inactiveTrackColor:   Color(0xFF444444),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-        ),
+        useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1565C0),
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: ThemeMode.system,
       home: const HomeScreen(),
     );
   }

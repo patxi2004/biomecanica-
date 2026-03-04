@@ -1,26 +1,24 @@
-name: exo_controller
-description: Controlador inalámbrico para el Exo-Robot de biomecánica.
+name: biped_controller
+description: Aplicación de control para robot bípedo 8-DOF vía BLE
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # Bluetooth Classic SPP — v2 embedding, activamente mantenido
-  bluetooth_classic: ^0.0.4
+  # BLE - Comunicación con el ESP32
+  flutter_blue_plus: ^1.31.0
 
-  # Permisos de Android en tiempo de ejecución
-  permission_handler: ^11.0.0
+  # Estado reactivo
+  provider: ^6.1.1
 
-  # Manejo de estado reactivo
-  provider: ^6.1.0
-
-  # Gráfica de líneas para roll y pitch en tiempo real
-  fl_chart: ^0.66.0
+  # Íconos extra (joystick visual)
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:

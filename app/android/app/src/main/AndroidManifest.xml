@@ -1,29 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  AndroidManifest.xml  —  Permisos BLE requeridos para Android
+  ─────────────────────────────────────────────────────────────
+  Android 12+ usa BLUETOOTH_SCAN y BLUETOOTH_CONNECT.
+  Android 6-11 usa ACCESS_FINE_LOCATION para el escaneo BLE.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- =========================================================
-         Permisos de Bluetooth Classic (Android 6–12+)
-         ========================================================= -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- ── Permisos Bluetooth (Android 12+) ──────────────── -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="s" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
+    <!-- ── Permisos Bluetooth (Android 6-11) ─────────────── -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:maxSdkVersion="30" />
+
+    <!-- ── Feature BLE ───────────────────────────────────── -->
     <uses-feature
-        android:name="android.hardware.bluetooth"
+        android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
+    <!-- ── Internet (no requerido, pero por si usas OTA) ─── -->
+    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+
     <application
-        android:label="Exo Controller"
+        android:label="Bípedo 8-DOF"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true">
+        android:icon="@mipmap/ic_launcher">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:taskAffinity=""
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -39,19 +56,14 @@
             </intent-filter>
         </activity>
 
-        <!-- Requerido por el Flutter tool para detectar v2 embedding.
-             Sin esto, Flutter asume v1 y el build falla. -->
+        <!-- No se necesita FlutterEmbeddingV2 explícito en Flutter 3+ -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
 
-    <!-- Necesario para plugins de texto del Flutter engine -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT" />
-            <data android:mimeType="text/plain" />
-        </intent>
-    </queries>
-
+    <!-- namespace xmlns:tools para targetApi en permisos -->
+    <uses-permission
+        android:name="android.permission.CHANGE_NETWORK_STATE"
+        tools:node="remove" />
 </manifest>
