@@ -29,6 +29,12 @@ constexpr int SERVO_PINS[8] = {13, 12, 14, 27, 26, 25, 33, 32};
 // Índices:  0=L_HipFlex  1=L_HipAbd  2=L_Knee  3=L_Ankle
 //           4=R_HipFlex  5=R_HipAbd  6=R_Knee  7=R_Ankle
 
+// ─── Pin ADC — batería (divisor resistivo 2:1) ──────────────
+constexpr int   BATT_ADC_PIN    = 34;      // GPIO34 — sólo entrada
+constexpr float BATT_DIV_RATIO  = 2.0f;    // divisor resistivo 1:1 cada resistencia
+constexpr float BATT_REF_V      = 3.3f;    // tensión de referencia ADC ESP32
+constexpr float BATT_ADC_MAX    = 4095.0f; // 12-bit ADC
+
 // ─── PWM servos ────────────────────────────────────────────
 constexpr int   SERVO_FREQ       = 50;      // Hz
 constexpr int   SERVO_RESOLUTION = 16;      // bits

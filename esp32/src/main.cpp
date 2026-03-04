@@ -166,10 +166,21 @@ void loop()
         ble.sendTelemetry(
             imu.pitch,
             imu.roll,
+            imu.ay,                  // aceleración Y en g
             current_state.com.x,
             current_state.com.y,
             current_state.phase
         );
+
+        // Ángulos de servo (radianes → convertidos a grados en BleComm)
+        float angles[8];
+        for (int i = 0; i < 8; i++) angles[i] = servo.currentAngle(i);
+        ble.sendServoTelemetry(angles);
+
+        // Batería: leer ADC y escalar
+        int raw_batt = analogRead(BATT_ADC_PIN);
+        float batt_v = (raw_batt / BATT_ADC_MAX) * BATT_REF_V * BATT_DIV_RATIO;
+        ble.sendBattery(batt_v);
 
         // Debug por Serial (opcional)
         if (Serial.availableForWrite() > 50) {

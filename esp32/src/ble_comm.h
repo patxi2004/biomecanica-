@@ -84,14 +84,14 @@ public:
     }
 
     // ─── Enviar telemetría ─────────────────────────────────
-    void sendTelemetry(float pitch, float roll, float zmp_x, float zmp_y,
-                       GaitPhase phase)
+    void sendTelemetry(float pitch, float roll, float accel_y,
+                       float zmp_x, float zmp_y, GaitPhase phase)
     {
         if (!connected) return;
 
-        // Enviar datos IMU
-        char buf[64];
-        snprintf(buf, sizeof(buf), "IMU:%.3f:%.3f", pitch, roll);
+        // Enviar datos IMU (pitch, roll, accelY)
+        char buf[80];
+        snprintf(buf, sizeof(buf), "IMU:%.3f:%.3f:%.3f", pitch, roll, accel_y);
         _tx_char->setValue((uint8_t*)buf, strlen(buf));
         _tx_char->notify();
 
@@ -103,6 +103,31 @@ public:
         // Fase actual
         const char* phase_str = phaseToStr(phase);
         snprintf(buf, sizeof(buf), "PHASE:%s", phase_str);
+        _tx_char->setValue((uint8_t*)buf, strlen(buf));
+        _tx_char->notify();
+    }
+
+    // ─── Enviar ángulos de servo ──────────────────────────
+    void sendServoTelemetry(const float angles_rad[8])
+    {
+        if (!connected) return;
+        char buf[96];
+        snprintf(buf, sizeof(buf),
+            "SERVO:%.1f:%.1f:%.1f:%.1f:%.1f:%.1f:%.1f:%.1f",
+            angles_rad[0]*180.0f/M_PI, angles_rad[1]*180.0f/M_PI,
+            angles_rad[2]*180.0f/M_PI, angles_rad[3]*180.0f/M_PI,
+            angles_rad[4]*180.0f/M_PI, angles_rad[5]*180.0f/M_PI,
+            angles_rad[6]*180.0f/M_PI, angles_rad[7]*180.0f/M_PI);
+        _tx_char->setValue((uint8_t*)buf, strlen(buf));
+        _tx_char->notify();
+    }
+
+    // ─── Enviar voltaje de batería ────────────────────────
+    void sendBattery(float voltage)
+    {
+        if (!connected) return;
+        char buf[20];
+        snprintf(buf, sizeof(buf), "BATT:%.2f", voltage);
         _tx_char->setValue((uint8_t*)buf, strlen(buf));
         _tx_char->notify();
     }
@@ -141,6 +166,7 @@ private:
             else if (strcmp(c, "TURN_RIGHT") == 0) g_gait_ptr->command = GaitCommand::TURN_RIGHT;
             else if (strcmp(c, "STOP")       == 0) g_gait_ptr->command = GaitCommand::STOP;
             else if (strcmp(c, "STAND")      == 0) g_gait_ptr->command = GaitCommand::STAND;
+            else if (strcmp(c, "RECOVER")    == 0) g_gait_ptr->command = GaitCommand::RECOVER;
         }
         else if (strncmp(cmd, "PARAM:", 6) == 0) {
             char key[32], val_str[16];

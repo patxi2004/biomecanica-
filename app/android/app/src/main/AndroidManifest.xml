@@ -5,7 +5,8 @@
   Android 12+ usa BLUETOOTH_SCAN y BLUETOOTH_CONNECT.
   Android 6-11 usa ACCESS_FINE_LOCATION para el escaneo BLE.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <!-- ── Permisos Bluetooth (Android 12+) ──────────────── -->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"

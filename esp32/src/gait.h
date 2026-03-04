@@ -20,7 +20,8 @@ enum class GaitCommand {
     BACKWARD,
     TURN_LEFT,
     TURN_RIGHT,
-    STAND
+    STAND,
+    RECOVER       // Recuperar postura tras caída
 };
 
 enum class GaitPhase {
@@ -103,7 +104,10 @@ public:
             Vec3 tgt = neutralTarget();
             state.left  = inverseKinematics(tgt, ankle_corr);
             state.right = inverseKinematics(tgt, ankle_corr);
-            if (command == GaitCommand::FORWARD ||
+            if (command == GaitCommand::RECOVER) {
+                // Recuperar: ir a postura neutral y volver a STAND
+                command = GaitCommand::STAND;
+            } else if (command == GaitCommand::FORWARD ||
                 command == GaitCommand::BACKWARD ||
                 command == GaitCommand::TURN_LEFT ||
                 command == GaitCommand::TURN_RIGHT) {
@@ -182,7 +186,8 @@ public:
             if (phase_t >= 1.0f) {
                 // Si comando es STOP → volver a IDLE
                 if (command == GaitCommand::STOP ||
-                    command == GaitCommand::STAND) {
+                    command == GaitCommand::STAND ||
+                    command == GaitCommand::RECOVER) {
                     phase = GaitPhase::IDLE;
                 } else {
                     phase   = GaitPhase::SWING_R;

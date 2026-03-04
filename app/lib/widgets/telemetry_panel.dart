@@ -2,7 +2,6 @@
 //  telemetry_panel.dart  —  Panel de datos IMU y ZMP en tiempo real
 // ============================================================
 
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../models/robot_state.dart';
